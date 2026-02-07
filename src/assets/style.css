@@ -1,7 +1,8 @@
 :root {
   /* Warm, paper-like theme (Notion-ish) */
-  --background-color: #f6f1e8;
-  --cell-background-color: rgba(255, 255, 255, 0.86);
+  --background-color: #f0eee9;
+  /* Card surface should be slightly brighter than page background */
+  --cell-background-color: rgba(255, 255, 255, 0.92);
   --foreground-color: #1f2328;
   --secondary-color: #6b7280;
 
@@ -342,9 +343,10 @@ audio::-webkit-media-controls-panel {
 }
 
 .time-box {
-  margin-top: 16px;
-  padding-top: 16px;
-  border-top: 1px solid var(--border-color);
+  /* time sits at the top of the card, no divider line */
+  margin: 0 0 18px 0;
+  padding: 0;
+  border-top: none;
   line-height: 1;
   display: flex;
   align-items: center;
@@ -364,6 +366,11 @@ audio::-webkit-media-controls-panel {
   font-size: 13px;
   font-weight: 500;
   padding-left: 8px;
+}
+
+/* Give content a bit more breathing room under the time row */
+.text-box {
+  margin-top: 2px;
 }
 
 #aside-container {
