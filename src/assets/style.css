@@ -7,7 +7,7 @@
   --secondary-color: #6b7280;
 
   /* Accent */
-  --highlight-color: #d97706; /* warm amber */
+  --highlight-color: #ea454c; /* warm red */
   --link-color: var(--highlight-color);
 
   /* Layout */
