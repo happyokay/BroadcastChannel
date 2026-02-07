@@ -1,6 +1,19 @@
 .content {
   word-break: break-word;
 
+  /* Make links in正文更明显：蓝色下划线（不改文字颜色，保持整体温暖风格） */
+  a:link,
+  a:visited {
+    text-decoration-line: underline;
+    text-decoration-color: #3b82f6;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+  }
+
+  a:hover {
+    text-decoration-color: #2563eb;
+  }
+
   .image-list-container {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
