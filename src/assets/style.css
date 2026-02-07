@@ -265,7 +265,7 @@ hr {
 .text-box,
 .tag-box {
   padding: 0;
-  margin: 0 0 16px 0;
+  margin: 0 0 12px 0; /* more compact */
   border-left: none; /* Removed the old line style */
 }
 
@@ -339,7 +339,7 @@ audio::-webkit-media-controls-panel {
 
 .text-box {
   font-size: 16px;
-  line-height: 1.7;
+  line-height: 1.55; /* compact but still readable */
 }
 
 .time-box {
