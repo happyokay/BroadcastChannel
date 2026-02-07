@@ -211,8 +211,8 @@ hr {
 }
 
 #main-content {
-  font-size: 16px;
-  line-height: 1.7;
+  font-size: 15.5px;
+  line-height: 1.65;
 }
 
 #site-intro {
@@ -236,16 +236,16 @@ hr {
 }
 
 .items {
-  margin-top: 32px;
+  margin-top: 24px;
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 28px;
 }
 
 .item {
   position: relative;
   background: var(--cell-background-color);
-  padding: 24px;
+  padding: 20px;
   border-radius: var(--box-border-radius);
   box-shadow: var(--shadows);
   border: 1px solid var(--border-color);
@@ -344,7 +344,7 @@ audio::-webkit-media-controls-panel {
 
 .time-box {
   /* time sits at the top of the card, no divider line */
-  margin: 0 0 18px 0;
+  margin: 0 0 14px 0;
   padding: 0;
   border-top: none;
   line-height: 1;
@@ -363,7 +363,7 @@ audio::-webkit-media-controls-panel {
 .time-box > .time {
   flex: 1;
   color: var(--secondary-color);
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 500;
   padding-left: 8px;
 }
