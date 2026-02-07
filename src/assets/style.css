@@ -212,7 +212,7 @@ hr {
 
 #main-content {
   font-size: 15.5px;
-  line-height: 1.65;
+  line-height: 1.6;
 }
 
 #site-intro {
@@ -236,16 +236,16 @@ hr {
 }
 
 .items {
-  margin-top: 24px;
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 22px;
 }
 
 .item {
   position: relative;
   background: var(--cell-background-color);
-  padding: 20px;
+  padding: 18px;
   border-radius: var(--box-border-radius);
   box-shadow: var(--shadows);
   border: 1px solid var(--border-color);
@@ -339,12 +339,12 @@ audio::-webkit-media-controls-panel {
 
 .text-box {
   font-size: 16px;
-  line-height: 1.55; /* compact but still readable */
+  line-height: 1.5; /* more compact */
 }
 
 .time-box {
   /* time sits at the top of the card, no divider line */
-  margin: 0 0 14px 0;
+  margin: 0 0 12px 0;
   padding: 0;
   border-top: none;
   line-height: 1;
