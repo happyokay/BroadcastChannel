@@ -124,7 +124,7 @@
     background: var(--code-background-color);
     border-left: 2px solid var(--highlight-color);
     padding: 12px 16px;
-    border-radius: var(--box-border-radius);
+    border-radius: 0; /* square */
     color: var(--secondary-color);
   }
 
