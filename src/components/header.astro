@@ -18,16 +18,18 @@ const BLUESKY = getEnv(import.meta.env, Astro, 'BLUESKY')
 const staticProxy = getEnv(import.meta.env, Astro, 'STATIC_PROXY') ?? '/static/'
 const hideDescription = getEnv(import.meta.env, Astro, 'HIDE_DESCRIPTION')
 
-const headerMainClass = 'mb-6 flex items-center border-b border-line pb-6 font-semibold'
-const avatarClass = 'block h-12 w-12 rounded-[12px] border border-white bg-white object-cover shadow-soft'
-const titleWrapClass = 'ml-4 min-w-0 flex-1 pr-[10px] text-[22px] font-bold'
-const titleLinkClass = 'text-heading no-underline hover:text-accent hover:no-underline'
-const iconNavClass = 'flex items-center gap-3'
-const socialLinkClass = 'group p-1 no-underline'
-const socialIconClass =
-  'h-[1em] w-[1em] align-bottom [filter:var(--icon-secondary-filter)] group-hover:[filter:var(--icon-hover-filter)]'
+const headerMainClass =
+  'relative mb-5 flex items-center overflow-hidden rounded-panel border border-heading bg-heading p-4 font-semibold text-white shadow-soft before:absolute before:inset-x-0 before:top-0 before:h-1 before:bg-[linear-gradient(90deg,var(--color-accent),var(--color-accent-warm),var(--color-accent-cool))] before:content-[""] sm:p-5'
+const avatarClass =
+  'relative z-10 block h-14 w-14 rounded-panel border border-white/25 bg-white object-cover shadow-soft'
+const titleWrapClass = 'relative z-10 ml-4 min-w-0 flex-1 pr-[10px] text-[24px] font-black leading-tight sm:text-[28px]'
+const titleLinkClass = 'text-white no-underline hover:text-white hover:no-underline'
+const iconNavClass = 'relative z-10 ml-auto flex max-w-[116px] flex-wrap items-center justify-end gap-2 sm:max-w-none'
+const socialLinkClass =
+  'group inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/15 bg-white/10 no-underline transition hover:-translate-y-px hover:bg-white/18 hover:no-underline'
+const socialIconClass = 'h-[1em] w-[1em] align-bottom text-white [filter:brightness(0)_invert(1)]'
 const introClass =
-  'mb-10 break-words rounded-panel border border-line bg-surface p-6 text-base leading-[1.6] text-ink shadow-soft'
+  'mb-8 break-words rounded-panel border border-line bg-surface-strong p-5 text-base leading-[1.65] text-ink shadow-soft sm:p-6'
 
 const socialLinks = [
   {
