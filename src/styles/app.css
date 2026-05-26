@@ -12,25 +12,21 @@
     'Noto Sans SC', 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
     'Noto Color Emoji';
   --breakpoint-sm: 37.5rem;
-  --color-paper: #f6f1e8;
-  --color-ink: #211b18;
-  --color-heading: #181513;
-  --color-accent: #e63746;
-  --color-accent-strong: #b91f31;
-  --color-accent-cool: #008f83;
-  --color-accent-warm: #f0b429;
-  --color-surface: rgba(255, 252, 246, 0.84);
-  --color-surface-strong: rgba(255, 252, 246, 0.96);
-  --color-code: rgba(33, 27, 24, 0.06);
-  --color-muted: #6f625c;
-  --color-link: rgba(33, 27, 24, 0.78);
-  --color-link-hover: rgba(230, 55, 70, 0.95);
-  --color-line: rgba(33, 27, 24, 0.12);
-  --color-footer: #7a6e66;
-  --shadow-soft: 0 1px 0 rgba(255, 255, 255, 0.7), 0 18px 45px rgba(55, 41, 32, 0.1);
-  --shadow-hover: 0 24px 60px rgba(55, 41, 32, 0.16);
-  --radius-panel: 8px;
-  --radius-media: 8px;
+  --color-paper: #f0eee9;
+  --color-ink: #1f2328;
+  --color-heading: #1f2328;
+  --color-accent: #ea454c;
+  --color-surface: rgba(255, 255, 255, 0.92);
+  --color-code: rgba(15, 23, 42, 0.04);
+  --color-muted: #6b7280;
+  --color-link: rgba(31, 35, 40, 0.78);
+  --color-link-hover: rgba(31, 35, 40, 0.92);
+  --color-line: rgba(15, 23, 42, 0.08);
+  --color-footer: #6b7280;
+  --shadow-soft: 0 1px 2px rgba(15, 23, 42, 0.04), 0 6px 16px rgba(15, 23, 42, 0.06);
+  --shadow-hover: 0 10px 25px rgba(15, 23, 42, 0.08);
+  --radius-panel: 10px;
+  --radius-media: 12px;
 }
 
 @layer base {
@@ -55,13 +51,7 @@
   }
 
   body {
-    min-height: 100svh;
-    background:
-      linear-gradient(120deg, rgba(230, 55, 70, 0.16), transparent 24rem),
-      linear-gradient(300deg, transparent 50%, rgba(0, 143, 131, 0.13)),
-      repeating-linear-gradient(90deg, rgba(33, 27, 24, 0.035) 0 1px, transparent 1px 76px),
-      repeating-linear-gradient(0deg, rgba(33, 27, 24, 0.026) 0 1px, transparent 1px 76px), var(--color-paper);
-    background-attachment: fixed;
+    background-color: var(--color-paper);
     color: var(--color-ink);
     font-family: var(--font-sans);
     text-rendering: optimizeLegibility;
@@ -71,10 +61,6 @@
     font-kerning: normal;
     font-synthesis-weight: none;
     font-variant-ligatures: common-ligatures;
-  }
-
-  ::selection {
-    background: rgba(240, 180, 41, 0.42);
   }
 
   img {

@@ -20,17 +20,16 @@ const hasContent = post.content.length > 0
 const hasReactions = Boolean(REACTIONS && post.reactions?.length > 0)
 const hasTags = post.tags.length > 0
 const articleClass =
-  'group relative mb-5 overflow-hidden rounded-panel border border-line bg-surface-strong p-4 shadow-soft transition duration-200 before:absolute before:inset-y-0 before:left-0 before:w-1 before:bg-[linear-gradient(180deg,var(--color-accent),var(--color-accent-cool))] before:opacity-75 before:content-[""] hover:-translate-y-0.5 hover:border-[rgba(33,27,24,0.22)] hover:shadow-[var(--shadow-hover)] sm:p-5'
-const timeBoxClass = 'relative mb-4 flex items-center leading-none'
-const timeDotClass =
-  'h-[8px] w-[8px] rounded-full bg-accent shadow-[0_0_0_4px_rgba(230,55,70,0.12)] transition group-hover:bg-[var(--color-accent-cool)] group-hover:shadow-[0_0_0_4px_rgba(0,143,131,0.13)]'
-const timeTextClass = 'm-0 flex-1 pl-3 text-[12.5px] font-bold uppercase text-muted'
+  'mb-[22px] rounded-panel border border-line bg-surface p-[18px] shadow-soft transition duration-200 hover:-translate-y-0.5 hover:shadow-[var(--shadow-hover)]'
+const timeBoxClass = 'mb-3 flex items-center leading-none'
+const timeDotClass = 'h-[6px] w-[6px] rounded-full bg-accent opacity-60'
+const timeTextClass = 'm-0 flex-1 pl-2 text-[12.5px] font-medium text-muted'
 const itemLinkClass = 'text-accent no-underline hover:underline'
-const contentClass = 'text-base leading-[1.58]'
+const contentClass = 'text-base leading-[1.5]'
 const reactionBoxClass = 'pt-3'
 const reactionListClass = 'm-0 flex flex-wrap gap-[6px]'
 const reactionPillClass =
-  'inline-flex items-center gap-1 rounded-full border border-line bg-code py-[3px] pl-[7px] pr-[9px] text-[12px] font-medium text-muted'
+  'inline-flex items-center gap-1 rounded-full border border-line bg-code py-[3px] pl-[6px] pr-[8px] text-[12px] text-muted'
 const reactionPaidClass = 'border-[rgba(255,196,0,0.35)] bg-[rgba(255,196,0,0.12)] text-[#9a6a00]'
 const reactionEmojiClass = 'inline-flex items-center text-[14px] leading-none'
 const reactionCountClass = 'font-medium opacity-80 [font-variant-numeric:tabular-nums]'
@@ -38,7 +37,7 @@ const tagBoxClass = 'flex flex-wrap items-center gap-2 text-[13px] leading-[1.6]
 const tagPaddingClass = COMMENTS && isItem ? 'pb-3' : 'pb-0'
 const tagStandaloneClass = 'pt-3'
 const tagLinkClass =
-  'inline-block rounded-[4px] border border-line bg-code px-[10px] py-[2px] font-medium text-muted no-underline hover:border-accent hover:bg-surface-strong hover:text-accent hover:no-underline'
+  'inline-block rounded-[4px] border border-line px-[10px] py-[2px] text-muted no-underline hover:border-accent hover:text-accent hover:no-underline'
 const commentsClass = 'pt-3'
 const getTagHref = (tag: string) => `/search/result?q=${encodeURIComponent(`#${tag}`)}`
 ---
