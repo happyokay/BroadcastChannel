@@ -19,15 +19,15 @@ const staticProxy = getEnv(import.meta.env, Astro, 'STATIC_PROXY') ?? '/static/'
 const hideDescription = getEnv(import.meta.env, Astro, 'HIDE_DESCRIPTION')
 
 const headerMainClass = 'mb-6 flex items-center border-b border-line pb-6 font-semibold'
-const avatarClass = 'block h-12 w-12 rounded-[12px] border border-white bg-white object-cover shadow-soft'
+const avatarClass = 'block h-12 w-12 rounded-[12px] border border-line bg-code object-cover shadow-soft'
 const titleWrapClass = 'ml-4 min-w-0 flex-1 pr-[10px] text-[22px] font-bold'
-const titleLinkClass = 'text-heading no-underline hover:text-accent hover:no-underline'
+const titleLinkClass = 'text-site-title no-underline hover:text-ink hover:no-underline'
 const iconNavClass = 'flex items-center gap-3'
 const socialLinkClass = 'group p-1 no-underline'
 const socialIconClass =
   'h-[1em] w-[1em] align-bottom [filter:var(--icon-secondary-filter)] group-hover:[filter:var(--icon-hover-filter)]'
 const introClass =
-  'mb-10 break-words rounded-panel border border-line bg-surface p-6 text-base leading-[1.6] text-ink shadow-soft'
+  'mb-10 break-words rounded-panel border border-line bg-surface p-6 text-base leading-[1.6] text-ink shadow-soft transition duration-200 hover:bg-surface-hover hover:shadow-[var(--shadow-hover)]'
 
 const socialLinks = [
   {

@@ -104,8 +104,8 @@ const asideInnerClass = 'relative overflow-y-visible sm:max-h-[100svh] sm:overfl
 const navListClass = 'm-0 flex list-none flex-wrap gap-[2px] pl-0 pt-5 sm:block'
 const navItemClass = 'flex items-center text-[14px] leading-none sm:mb-[10px] sm:text-base sm:leading-normal'
 const navLinkClass =
-  'flex-1 inline-block rounded-[8px] px-3 py-2 font-medium text-heading no-underline transition-all duration-200 ease-in-out hover:translate-x-1 hover:bg-surface hover:shadow-soft hover:no-underline'
-const navLinkCurrentClass = 'bg-surface text-accent shadow-soft'
+  'flex-1 inline-block rounded-[8px] px-3 py-2 font-medium text-ink no-underline transition-all duration-200 ease-in-out hover:translate-x-1 hover:bg-surface-hover hover:shadow-soft hover:no-underline'
+const navLinkCurrentClass = 'bg-surface text-site-title shadow-soft'
 const skipLinkClass =
   'pointer-events-none absolute left-5 top-0 z-[1100] -translate-y-full rounded-panel bg-heading px-3 py-2 text-sm text-white no-underline transition-transform duration-150 focus-visible:pointer-events-auto focus-visible:translate-y-5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-heading'
 const searchToggleId = 'search-toggle'
@@ -129,7 +129,7 @@ const searchLabelText = 'Search'
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#edebdf" />
+    <meta name="theme-color" content="#e3e4e6" />
     <link rel="alternate" type="application/rss+xml" title={`${RSS_PREFIX}${channel?.title}`} href={RSS_URL} />
     <SEO
       titleTemplate={hasCustomTitle ? `%s | ${siteTitle}` : undefined}

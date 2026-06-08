@@ -111,16 +111,21 @@
 
     a:link,
     a:visited {
+      display: inline;
+      padding: 0.05em 0.28em;
+      border-radius: 3px;
+      background: var(--color-code);
+      color: var(--color-link);
       line-break: anywhere;
-      text-decoration-line: underline;
-      text-decoration-color: var(--color-accent-blue);
-      text-decoration-thickness: 2px;
-      text-underline-offset: 3px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+      font-size: 0.95em;
+      text-decoration-line: none;
     }
 
     a:hover {
-      color: var(--color-accent);
-      text-decoration-color: var(--color-accent);
+      color: var(--color-link-hover);
+      text-decoration-line: underline;
+      text-underline-offset: 2px;
     }
 
     pre {
@@ -140,7 +145,16 @@
     }
 
     code {
+      padding: 0.05em 0.28em;
+      border-radius: 3px;
+      background: var(--color-code);
       line-break: anywhere;
+    }
+
+    pre code {
+      padding: 0;
+      border-radius: 0;
+      background: transparent;
     }
 
     figure {
@@ -277,10 +291,9 @@
       min-width: 0;
       overflow: hidden;
       width: 100%;
-      background: var(--color-surface);
-      border-left: 2px solid var(--color-accent);
+      background: var(--color-quote);
+      border-left: 2px solid var(--color-muted);
       padding: 12px;
-      border-radius: var(--radius-panel);
 
       .link_preview_title {
         display: block;
@@ -349,20 +362,18 @@
     blockquote {
       margin: 16px 0;
       font-size: 0.8em;
-      background: var(--color-surface);
-      border-left: 2px solid var(--color-accent);
+      background: var(--color-quote);
+      border-left: 2px solid var(--color-muted);
       padding: 12px;
-      border-radius: var(--radius-panel);
     }
 
     .tg-expandable {
       margin: 16px 0;
       font-size: 0.8em;
-      background: var(--color-surface);
-      border-left: 2px solid var(--color-accent);
+      background: var(--color-quote);
+      border-left: 2px solid var(--color-muted);
       padding: 12px;
       padding-right: 30px;
-      border-radius: var(--radius-panel);
       position: relative;
       min-height: 3.6em;
     }
