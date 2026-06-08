@@ -100,7 +100,7 @@ const layoutGridClass = 'mx-auto flex w-full max-w-[900px] flex-col-reverse gap-
 const mainPanelClass = 'w-full min-w-0 py-10 sm:flex-1'
 const asidePanelClass =
   'sticky top-0 w-full min-w-0 border-b border-line bg-paper pb-[10px] shadow-[0_4px_16px_-16px_rgba(0,0,0,0.1)] sm:w-[240px] sm:min-w-[240px] sm:self-start sm:border-b-0 sm:bg-transparent sm:pb-5 sm:pt-10 sm:shadow-none'
-const asideInnerClass = 'relative overflow-y-visible sm:max-h-[100svh] sm:overflow-y-auto'
+const asideInnerClass = 'relative overflow-y-visible sm:max-h-[100svh] sm:overflow-x-hidden sm:overflow-y-auto'
 const navListClass = 'm-0 flex list-none flex-wrap gap-[2px] pl-0 pt-5 sm:block'
 const navItemClass = 'flex items-center text-[14px] leading-none sm:mb-[10px] sm:text-base sm:leading-normal'
 const navLinkClass =
@@ -116,7 +116,6 @@ const searchFormClass =
   'mt-3 hidden rounded-panel border border-line bg-code p-2 text-muted peer-checked:block sm:mt-0 sm:block'
 const searchInputClass =
   'box-border w-full rounded-panel border border-transparent bg-surface px-2 text-[16px] leading-[2.4] text-heading outline-none placeholder:text-muted focus-visible:border-heading focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-heading sm:text-[12px]'
-const footerClass = 'hidden p-2 text-[14px] leading-[1.5] text-footer sm:block'
 const backToTopClass =
   'pointer-events-auto z-[1000] flex h-8 w-8 items-center justify-center rounded-full bg-surface text-[24px] opacity-90 shadow-soft transition-transform duration-300 hover:-translate-y-[3px] active:translate-y-px'
 const backToTopIconClass = 'h-auto w-auto [filter:var(--icon-secondary-filter)]'
@@ -230,26 +229,6 @@ const searchLabelText = 'Search'
                   spellcheck={false}
                 />
               </form>
-
-              <footer class={footerClass}>
-                Powered by
-                <a
-                  href="https://github.com/miantiao-me/BroadcastChannel"
-                  title="BroadcastChannel"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  BroadcastChannel
-                </a> &
-                <a
-                  href="https://github.com/Planetable/SiteTemplateSepia"
-                  title="Sepia"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Sepia
-                </a>
-              </footer>
             </div>
           </slot>
         </aside>
