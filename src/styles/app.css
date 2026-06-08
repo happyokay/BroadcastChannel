@@ -12,19 +12,23 @@
     'Noto Sans SC', 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
     'Noto Color Emoji';
   --breakpoint-sm: 37.5rem;
-  --color-paper: #f0eee9;
-  --color-ink: #1f2328;
-  --color-heading: #1f2328;
-  --color-accent: #ea454c;
-  --color-surface: rgba(255, 255, 255, 0.92);
-  --color-code: rgba(15, 23, 42, 0.04);
-  --color-muted: #6b7280;
-  --color-link: rgba(31, 35, 40, 0.78);
-  --color-link-hover: rgba(31, 35, 40, 0.92);
-  --color-line: rgba(15, 23, 42, 0.08);
-  --color-footer: #6b7280;
-  --shadow-soft: 0 1px 2px rgba(15, 23, 42, 0.04), 0 6px 16px rgba(15, 23, 42, 0.06);
-  --shadow-hover: 0 10px 25px rgba(15, 23, 42, 0.08);
+  --color-paper: #edebdf;
+  --color-ink: #4c4d61;
+  --color-heading: #4c4d61;
+  --color-accent: #c24e4c;
+  --color-accent-soft: #ed8372;
+  --color-accent-blue: #5a88fa;
+  --color-accent-cyan: #9fd1e3;
+  --color-accent-yellow: #edc774;
+  --color-surface: rgba(255, 249, 227, 0.88);
+  --color-code: rgba(227, 228, 230, 0.62);
+  --color-muted: #8a99a6;
+  --color-link: rgba(76, 77, 97, 0.82);
+  --color-link-hover: #c24e4c;
+  --color-line: #d0d4d9;
+  --color-footer: #8a99a6;
+  --shadow-soft: 0 1px 0 rgba(76, 77, 97, 0.08), 0 8px 22px rgba(76, 77, 97, 0.07);
+  --shadow-hover: 0 14px 32px rgba(76, 77, 97, 0.12);
   --radius-panel: 10px;
   --radius-media: 12px;
 }
@@ -35,8 +39,8 @@
     --back-to-top-offset: 1.25rem;
     --back-to-top-size: 2rem;
     --dot-size: 8px;
-    --icon-hover-filter: invert(38%) sepia(55%) saturate(1150%) hue-rotate(7deg) brightness(92%) contrast(92%);
-    --icon-secondary-filter: invert(45%) sepia(10%) saturate(200%) hue-rotate(178deg) brightness(94%) contrast(90%);
+    --icon-hover-filter: invert(42%) sepia(36%) saturate(1187%) hue-rotate(316deg) brightness(83%) contrast(86%);
+    --icon-secondary-filter: invert(54%) sepia(15%) saturate(506%) hue-rotate(166deg) brightness(90%) contrast(85%);
   }
 
   * {
@@ -51,7 +55,13 @@
   }
 
   body {
-    background-color: var(--color-paper);
+    background:
+      linear-gradient(rgba(208, 212, 217, 0.26) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(208, 212, 217, 0.18) 1px, transparent 1px), var(--color-paper);
+    background-size:
+      32px 32px,
+      32px 32px,
+      auto;
     color: var(--color-ink);
     font-family: var(--font-sans);
     text-rendering: optimizeLegibility;

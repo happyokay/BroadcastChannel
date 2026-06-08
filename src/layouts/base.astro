@@ -95,7 +95,7 @@ const navs: NavItem[] = (getEnv(import.meta.env, Astro, 'NAVS') || '')
     }
   })
 
-const layoutShellClass = 'mx-5'
+const layoutShellClass = 'box-border w-full px-5'
 const layoutGridClass = 'mx-auto flex w-full max-w-[900px] flex-col-reverse gap-10 sm:flex-row sm:items-start'
 const mainPanelClass = 'w-full min-w-0 py-10 sm:flex-1'
 const asidePanelClass =
@@ -112,9 +112,10 @@ const searchToggleId = 'search-toggle'
 const searchToggleClass = 'peer sr-only sm:hidden'
 const searchToggleLabelClass =
   'absolute right-0 top-5 inline-flex h-6 w-6 items-center justify-center rounded-panel bg-paper text-base leading-6 text-heading no-underline peer-focus-visible:outline peer-focus-visible:outline-1 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-heading sm:hidden'
-const searchFormClass = 'mt-3 hidden rounded-panel bg-code p-2 text-muted peer-checked:block sm:mt-0 sm:block'
+const searchFormClass =
+  'mt-3 hidden rounded-panel border border-line bg-code p-2 text-muted peer-checked:block sm:mt-0 sm:block'
 const searchInputClass =
-  'box-border w-full rounded-panel border border-paper bg-code px-2 text-[16px] leading-[2.4] text-muted outline-none placeholder:text-muted focus-visible:border-heading focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-heading sm:text-[12px]'
+  'box-border w-full rounded-panel border border-transparent bg-surface px-2 text-[16px] leading-[2.4] text-heading outline-none placeholder:text-muted focus-visible:border-heading focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-heading sm:text-[12px]'
 const footerClass = 'hidden p-2 text-[14px] leading-[1.5] text-footer sm:block'
 const backToTopClass =
   'pointer-events-auto z-[1000] flex h-8 w-8 items-center justify-center rounded-full bg-surface text-[24px] opacity-90 shadow-soft transition-transform duration-300 hover:-translate-y-[3px] active:translate-y-px'
@@ -128,7 +129,7 @@ const searchLabelText = 'Search'
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#f0eee9" />
+    <meta name="theme-color" content="#edebdf" />
     <link rel="alternate" type="application/rss+xml" title={`${RSS_PREFIX}${channel?.title}`} href={RSS_URL} />
     <SEO
       titleTemplate={hasCustomTitle ? `%s | ${siteTitle}` : undefined}

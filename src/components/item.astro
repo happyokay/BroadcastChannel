@@ -30,7 +30,7 @@ const reactionBoxClass = 'pt-3'
 const reactionListClass = 'm-0 flex flex-wrap gap-[6px]'
 const reactionPillClass =
   'inline-flex items-center gap-1 rounded-full border border-line bg-code py-[3px] pl-[6px] pr-[8px] text-[12px] text-muted'
-const reactionPaidClass = 'border-[rgba(255,196,0,0.35)] bg-[rgba(255,196,0,0.12)] text-[#9a6a00]'
+const reactionPaidClass = 'border-[color:var(--color-accent-yellow)] bg-[rgba(237,199,116,0.18)] text-heading'
 const reactionEmojiClass = 'inline-flex items-center text-[14px] leading-none'
 const reactionCountClass = 'font-medium opacity-80 [font-variant-numeric:tabular-nums]'
 const tagBoxClass = 'flex flex-wrap items-center gap-2 text-[13px] leading-[1.6]'
@@ -105,7 +105,7 @@ const getTagHref = (tag: string) => `/search/result?q=${encodeURIComponent(`#${t
           data-telegram-discussion={`${channel}/${post.id}`}
           data-comments-limit="50"
           data-colorful="1"
-          data-color="454545"
+          data-color="4c4d61"
         />
       </section>
     )
