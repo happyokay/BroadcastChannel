@@ -96,7 +96,7 @@ const navs: NavItem[] = (getEnv(import.meta.env, Astro, 'NAVS') || '')
   })
 
 const layoutShellClass = 'box-border w-full px-5'
-const layoutGridClass = 'mx-auto flex w-full max-w-[900px] flex-col-reverse gap-10 sm:flex-row sm:items-start'
+const layoutGridClass = 'mx-auto flex w-full max-w-[900px] flex-col gap-10 sm:flex-row-reverse sm:items-start'
 const mainPanelClass = 'w-full min-w-0 py-10 sm:flex-1'
 const asidePanelClass =
   'sticky top-0 w-full min-w-0 border-b border-line bg-paper pb-[10px] shadow-[0_4px_16px_-16px_rgba(0,0,0,0.1)] sm:w-[240px] sm:min-w-[240px] sm:self-start sm:border-b-0 sm:bg-transparent sm:pb-5 sm:pt-10 sm:shadow-none'
@@ -146,9 +146,6 @@ const searchLabelText = 'Search'
     <a href="#main-content" class={skipLinkClass}>{skipLinkText}</a>
     <main id="main-content" class={layoutShellClass}>
       <div class={layoutGridClass}>
-        <div class={mainPanelClass}>
-          <slot />
-        </div>
         <aside class={asidePanelClass}>
           <slot name="aside">
             <div class={asideInnerClass}>
@@ -232,6 +229,9 @@ const searchLabelText = 'Search'
             </div>
           </slot>
         </aside>
+        <div class={mainPanelClass}>
+          <slot />
+        </div>
       </div>
       <div id="back-to-top-wrapper">
         <a href="#main-content" id="back-to-top" class={backToTopClass} aria-label="Back to top">
