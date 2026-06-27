@@ -1,9 +1,8 @@
 ---
-import { getEnv } from '../../lib/env'
-import voidFile from '../../assets/void.png'
+import ChannelAvatar from '../../components/ChannelAvatar.astro'
 import List from '../../components/list.astro'
+import { siteTitleClass } from '../../lib/style-classes'
 import { getChannelInfo, getChannelPost } from '../../lib/telegram'
-import { siteTitleStyle } from '../../lib/ui'
 
 const { SITE_URL } = Astro.locals
 
@@ -13,36 +12,51 @@ if (!Astro.params.id) {
   return Astro.redirect('/')
 }
 
-const post = await getChannelPost(Astro, Astro.params.id)
+const post =
+  channelInfo.posts.find((item) => item.id === Astro.params.id) ?? (await getChannelPost(Astro, Astro.params.id))
+
+if (!post) {
+  return new Response('Not Found', {
+    status: 404,
+    headers: {
+      'Cache-Control': 'public, max-age=300, s-maxage=300',
+    },
+  })
+}
 
 const channel = {
   ...(channelInfo || {}),
   posts: [post],
-  seo: post,
 }
 
-const staticProxy = getEnv(import.meta.env, Astro, 'STATIC_PROXY') ?? '/static/'
-const breadcrumbClass = 'mb-5 py-[10px] font-semibold'
+const breadcrumbClass = 'mb-5 py-2.5 font-semibold'
 const breadcrumbListClass = 'm-0 flex list-none items-center p-0'
 const breadcrumbLinkClass = 'inline-flex items-center no-underline'
 const breadcrumbAvatarClass = 'block h-5 w-5 rounded-full border-2 border-white object-cover shadow-soft'
-const breadcrumbTitleClass = 'ml-[10px] flex-1 text-[14px] text-heading'
+const breadcrumbTitleClass = `ml-2.5 flex-1 text-sm text-heading ${siteTitleClass}`
 ---
 
-<List channel={channel} before={false} after={false} isItem={true} pageHeading={post.title || channel.title}>
+<List
+  channel={channel}
+  before={false}
+  after={false}
+  isItem={true}
+  pageHeading={post.title || channel.title}
+  pageSeo={post}
+>
   <nav slot="header" class={breadcrumbClass} aria-label="Breadcrumb">
     <ol class={breadcrumbListClass}>
       <li>
         <a href={SITE_URL} class={breadcrumbLinkClass} title={channel?.title}>
-          <img
-            src={channel?.avatar?.startsWith('http') ? staticProxy + channel?.avatar : voidFile.src}
-            alt={channel?.title}
+          <ChannelAvatar
+            channel={channel}
+            alt=""
             loading="eager"
             width="20"
             height="20"
             class={breadcrumbAvatarClass}
           />
-          <span class={breadcrumbTitleClass} style={siteTitleStyle}>{channel.title}</span>
+          <span class={breadcrumbTitleClass}>{channel.title}</span>
         </a>
       </li>
     </ol>

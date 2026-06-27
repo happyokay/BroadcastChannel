@@ -4,7 +4,6 @@ import netlify from '@astrojs/netlify'
 import node from '@astrojs/node'
 import vercel from '@astrojs/vercel'
 import edgeone from '@edgeone/astro'
-import sentry from '@sentry/astro'
 import tailwindcss from '@tailwindcss/vite'
 import astroIcon from 'astro-icon'
 import { defineConfig } from 'astro/config'
@@ -15,7 +14,7 @@ const providers = {
     isr: false,
     edgeMiddleware: false,
   }),
-  cloudflare_pages: cloudflare(),
+  cloudflare_workers: cloudflare(),
   netlify: netlify({
     cacheOnDemandPages: false,
     edgeMiddleware: false,
@@ -26,9 +25,21 @@ const providers = {
   edgeone: edgeone(),
 }
 
-const adapterProvider = (process.env.HOME === '/dev/shm/home' && process.env.TMPDIR === '/dev/shm/tmp')
+const adapterAliases = {
+  cloudflare: 'cloudflare_workers',
+}
+
+const unsupportedProviders = new Set(['cloudflare-pages', 'cloudflare_pages'])
+
+const requestedProvider = (process.env.HOME === '/dev/shm/home' && process.env.TMPDIR === '/dev/shm/tmp')
   ? 'edgeone'
   : process.env.SERVER_ADAPTER || provider
+
+if (unsupportedProviders.has(requestedProvider)) {
+  throw new Error('Cloudflare Pages is not supported. Use Cloudflare Workers with SERVER_ADAPTER=cloudflare_workers.')
+}
+
+const adapterProvider = adapterAliases[requestedProvider] || requestedProvider
 
 // https://astro.build/config
 export default defineConfig({
@@ -36,62 +47,11 @@ export default defineConfig({
   adapter: providers[adapterProvider] || providers.node,
   integrations: [
     astroIcon(),
-    ...(process.env.SENTRY_DSN
-      ? [
-          sentry({
-            enabled: {
-              client: false,
-              server: process.env.SENTRY_DSN,
-            },
-            dsn: process.env.SENTRY_DSN,
-            sourceMapsUploadOptions: {
-              enabled: process.env.SENTRY_PROJECT && process.env.SENTRY_AUTH_TOKEN,
-              project: process.env.SENTRY_PROJECT,
-              authToken: process.env.SENTRY_AUTH_TOKEN,
-            },
-          }),
-        ]
-      : []),
   ],
   vite: {
     plugins: [tailwindcss()],
     ssr: {
       noExternal: process.env.DOCKER ? !!process.env.DOCKER : undefined,
-      external: [
-        ...adapterProvider === 'cloudflare_pages'
-          ? [
-              'module',
-              'url',
-              'events',
-              'worker_threads',
-              'async_hooks',
-              'util',
-              'node:diagnostics_channel',
-              'node:net',
-              'node:tls',
-              'node:worker_threads',
-              'node:util',
-              'node:fs',
-              'node:path',
-              'node:process',
-              'node:buffer',
-              'node:string_decoder',
-              'node:readline',
-              'node:events',
-              'node:stream',
-              'node:assert',
-              'node:os',
-              'node:crypto',
-              'node:zlib',
-              'node:http',
-              'node:https',
-              'node:url',
-              'node:querystring',
-              'node:child_process',
-              'node:inspector',
-            ]
-          : [],
-      ],
     },
   },
 })

@@ -34,7 +34,11 @@
   --shadow-soft: 0 1px 0 rgba(77, 77, 95, 0.08), 0 8px 20px rgba(77, 77, 95, 0.05);
   --shadow-hover: 0 14px 30px rgba(77, 77, 95, 0.09);
   --radius-panel: 10px;
+  --radius-chip: 4px;
   --radius-media: 12px;
+  --color-paid: #9a6a00;
+  --color-paid-line: rgba(154, 106, 0, 0.28);
+  --color-paid-surface: rgba(255, 196, 0, 0.12);
 }
 
 @layer base {

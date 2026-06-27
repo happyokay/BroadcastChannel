@@ -1,13 +1,15 @@
 ---
-import { getEnv } from '../lib/env'
 import { Icon } from 'astro-icon/components'
-import voidFile from '../assets/void.png'
-import { siteTitleStyle } from '../lib/ui'
+import ChannelAvatar from './ChannelAvatar.astro'
+import { getBooleanEnv, getEnv, getPodcastUrl } from '../lib/env'
+import { sanitizeContentHtml } from '../lib/sanitize'
+import { buildSocialLinks } from '../lib/social'
+import { siteTitleClass } from '../lib/style-classes'
 
 const { SITE_URL, RSS_URL } = Astro.locals
 const { channel } = Astro.props
 
-const PODCASRT = getEnv(import.meta.env, Astro, 'PODCASRT')
+const PODCAST = getPodcastUrl(import.meta.env, Astro)
 const TWITTER = getEnv(import.meta.env, Astro, 'TWITTER')
 const GITHUB = getEnv(import.meta.env, Astro, 'GITHUB')
 const TELEGRAM = getEnv(import.meta.env, Astro, 'TELEGRAM')
@@ -15,13 +17,13 @@ const DISCORD = getEnv(import.meta.env, Astro, 'DISCORD')
 const MASTODON = getEnv(import.meta.env, Astro, 'MASTODON')
 const BLUESKY = getEnv(import.meta.env, Astro, 'BLUESKY')
 
-const staticProxy = getEnv(import.meta.env, Astro, 'STATIC_PROXY') ?? '/static/'
-const hideDescription = getEnv(import.meta.env, Astro, 'HIDE_DESCRIPTION')
+const hideDescription = getBooleanEnv(import.meta.env, Astro, 'HIDE_DESCRIPTION')
+const descriptionHtml = channel?.descriptionHTML ? sanitizeContentHtml(channel.descriptionHTML) : ''
 
 const headerMainClass = 'mb-6 flex items-center border-b border-line pb-6 font-semibold'
 const avatarClass = 'block h-12 w-12 rounded-[12px] border border-line bg-code object-cover shadow-soft'
 const titleWrapClass = 'ml-4 min-w-0 flex-1 pr-[10px] text-[22px] font-bold'
-const titleLinkClass = 'text-site-title no-underline hover:text-ink hover:no-underline'
+const titleLinkClass = `text-site-title no-underline hover:text-ink hover:no-underline ${siteTitleClass}`
 const iconNavClass = 'flex items-center gap-3'
 const socialLinkClass = 'group p-1 no-underline'
 const socialIconClass =
@@ -29,79 +31,24 @@ const socialIconClass =
 const introClass =
   'mb-10 break-words rounded-panel border border-line bg-surface p-6 text-base leading-[1.6] text-ink shadow-soft transition duration-200 hover:bg-surface-hover hover:shadow-[var(--shadow-hover)]'
 
-const socialLinks = [
-  {
-    href: RSS_URL,
-    title: 'RSS Feed',
-    label: 'RSS Feed',
-    icon: 'ri:rss-line',
-    rel: 'alternate noopener noreferrer',
-    type: 'application/rss+xml',
-  },
-  PODCASRT && {
-    href: PODCASRT,
-    title: 'Podcast',
-    label: 'Podcast',
-    icon: 'ri:mic-line',
-    rel: 'noopener noreferrer',
-  },
-  TWITTER &&
-    TWITTER.length > 0 && {
-      href: `https://x.com/${TWITTER}`,
-      title: 'Twitter',
-      label: 'Twitter / X',
-      icon: 'ri:twitter-x-line',
-      rel: 'noopener noreferrer',
-    },
-  GITHUB &&
-    GITHUB.length > 0 && {
-      href: `https://github.com/${GITHUB}`,
-      title: 'GitHub',
-      label: 'GitHub',
-      icon: 'ri:github-line',
-      rel: 'noopener noreferrer',
-    },
-  TELEGRAM &&
-    TELEGRAM.length > 0 && {
-      href: `https://t.me/${TELEGRAM}`,
-      title: 'Telegram',
-      label: 'Telegram',
-      icon: 'ri:telegram-line',
-      rel: 'noopener noreferrer',
-    },
-  DISCORD &&
-    DISCORD.length > 0 && {
-      href: DISCORD,
-      title: 'Discord',
-      label: 'Discord',
-      icon: 'ri:discord-line',
-      rel: 'noopener noreferrer',
-    },
-  MASTODON &&
-    MASTODON.length > 0 && {
-      href: `https://${MASTODON}`,
-      title: 'Mastodon',
-      label: 'Mastodon',
-      icon: 'ri:mastodon-line',
-      rel: 'noopener noreferrer',
-    },
-  BLUESKY &&
-    BLUESKY.length > 0 && {
-      href: `https://bsky.app/profile/${BLUESKY}`,
-      title: 'BlueSky',
-      label: 'Bluesky',
-      icon: 'ri:bluesky-line',
-      rel: 'noopener noreferrer',
-    },
-].filter(Boolean)
+const socialLinks = buildSocialLinks({
+  rssUrl: RSS_URL,
+  podcast: PODCAST,
+  twitter: TWITTER,
+  github: GITHUB,
+  telegram: TELEGRAM,
+  discord: DISCORD,
+  mastodon: MASTODON,
+  bluesky: BLUESKY,
+})
 ---
 
 <header>
   <div class={headerMainClass}>
-    <a href={SITE_URL} title={channel?.title}>
-      <img
-        src={channel?.avatar?.startsWith('http') ? staticProxy + channel?.avatar : voidFile.src}
-        alt={channel?.title}
+    <a href={SITE_URL} title={channel?.title} aria-label="Home">
+      <ChannelAvatar
+        channel={channel}
+        alt=""
         loading="eager"
         fetchpriority="high"
         width="40"
@@ -110,7 +57,7 @@ const socialLinks = [
       />
     </a>
     <div class={titleWrapClass}>
-      <a href={SITE_URL} class={titleLinkClass} style={siteTitleStyle} title={channel?.title}>
+      <a href={SITE_URL} class={titleLinkClass} title={channel?.title}>
         {channel?.title}
       </a>
     </div>
@@ -135,7 +82,7 @@ const socialLinks = [
 </header>
 
 {
-  hideDescription !== 'true' && channel?.descriptionHTML && channel?.descriptionHTML.length > 0 && (
-    <div class:list={[introClass, 'content']} set:html={channel?.descriptionHTML} />
+  !hideDescription && descriptionHtml.length > 0 && (
+    <div class:list={[introClass, 'content']} set:html={descriptionHtml} />
   )
 }

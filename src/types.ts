@@ -24,8 +24,6 @@ export interface ChannelInfo {
   description: string
   descriptionHTML: string | null
   avatar: string | undefined
-  /** Optional SEO override injected by page routes */
-  seo?: SeoMeta
 }
 
 export interface SeoMeta {
@@ -42,12 +40,8 @@ export interface GetChannelInfoParams {
   q?: string
 }
 
-export interface EnvCapableAstro {
-  locals?: App.Locals & {
-    runtime?: {
-      env?: Record<string, string | undefined>
-    }
-  }
+export interface AstroEnvContext {
+  locals?: App.Locals
   request?: Request
   url?: URL
 }
@@ -55,4 +49,11 @@ export interface EnvCapableAstro {
 export interface NavItem {
   title: string
   href: string
+}
+
+export interface TagCloudItem {
+  href: string
+  label: string
+  title?: string
+  external?: boolean
 }

@@ -1,81 +1,24 @@
 ---
 import '../styles/app.css'
 import { SEO } from 'astro-seo'
-import { getEnv } from '../lib/env'
-import backToTopIcon from '../assets/back-to-top.svg'
-import type { NavItem } from '../types'
+import BackToTop from '../components/BackToTop.astro'
+import NavSidebar from '../components/NavSidebar.astro'
+import { getEnv, parseDelimitedItems } from '../lib/env'
+import { getPageSeo } from '../lib/seo'
 
 const { SITE_URL, RSS_URL, RSS_PREFIX } = Astro.locals
-const { channel } = Astro.props
+const { channel, seo } = Astro.props
 
 const locale = getEnv(import.meta.env, Astro, 'LOCALE')
-
-const seo = channel?.seo
-
-function normalizePathname(pathname: string): string {
-  return pathname.replace(/\/$/, '') || '/'
-}
-
-const absoluteSiteUrl = SITE_URL.startsWith('http') ? SITE_URL : new URL(SITE_URL, Astro.url.origin).toString()
-const canonicalUrl = new URL(Astro.url.pathname, absoluteSiteUrl)
-const siteRootPathname = normalizePathname(new URL(absoluteSiteUrl).pathname)
-const canonical =
-  normalizePathname(canonicalUrl.pathname) === siteRootPathname
-    ? canonicalUrl.toString()
-    : canonicalUrl.toString().replace(/\/$/, '')
-
-const { pathname } = new URL(canonical)
-const currentPathname = normalizePathname(pathname)
 const twitter = getEnv(import.meta.env, Astro, 'TWITTER')
-const pageTitle = seo?.title?.trim()
-const siteTitle = channel?.title ?? ''
-const seoDescription = seo?.text ?? channel?.description
-const shareImage = channel?.avatar
-  ? `https://wsrv.nl/?w=1200&h=630&fit=cover&url=ssl:${channel.avatar.replace(/^https?:\/\//, '')}`
-  : new URL('favicon.ico', absoluteSiteUrl).toString()
-const favicon = channel?.avatar
-  ? `https://wsrv.nl/?w=64&h=64&fit=cover&mask=circle&url=ssl:${channel.avatar.replace(/^https?:\/\//, '')}`
-  : new URL('favicon.svg', absoluteSiteUrl).toString()
-const hasCustomTitle = Boolean(pageTitle && pageTitle !== siteTitle)
-const isArticle = /\/posts\/[^/]+$/.test(pathname)
-const tagsPathname = normalizePathname(new URL('tags', absoluteSiteUrl).pathname)
-const linksPathname = normalizePathname(new URL('links', absoluteSiteUrl).pathname)
-
-const seoParams = {
-  title: pageTitle,
-  description: seoDescription,
-  canonical,
-  noindex: seo?.noindex ?? getEnv(import.meta.env, Astro, 'NOINDEX'),
-  nofollow: seo?.nofollow ?? getEnv(import.meta.env, Astro, 'NOFOLLOW'),
-  openGraph: {
-    basic: {
-      type: isArticle ? 'article' : 'website',
-      title: pageTitle ?? siteTitle,
-      url: canonical,
-      image: shareImage,
-    },
-    optional: {
-      description: seoDescription,
-      locale,
-    },
-  },
-  extend: {
-    link: [
-      {
-        rel: 'icon',
-        href: favicon,
-      },
-      {
-        rel: 'apple-touch-icon',
-        href: new URL('favicon.ico', absoluteSiteUrl).toString(),
-      },
-      {
-        rel: 'manifest',
-        href: new URL('site.webmanifest', absoluteSiteUrl).toString(),
-      },
-    ],
-  },
-}
+const { currentPathname, hasCustomTitle, linksPathname, seoParams, siteRootPathname, siteTitle, tagsPathname } =
+  getPageSeo({
+    Astro,
+    channel,
+    locale,
+    seo,
+    siteUrl: SITE_URL,
+  })
 
 const GOOGLE_SEARCH_SITE = getEnv(import.meta.env, Astro, 'GOOGLE_SEARCH_SITE')
 const searchAction = GOOGLE_SEARCH_SITE ? 'https://www.google.com/search' : `${SITE_URL}search/result`
@@ -84,43 +27,16 @@ const HEADER_INJECT = getEnv(import.meta.env, Astro, 'HEADER_INJECT')
 const FOOTER_INJECT = getEnv(import.meta.env, Astro, 'FOOTER_INJECT')
 const TAGS = getEnv(import.meta.env, Astro, 'TAGS')
 const LINKS = getEnv(import.meta.env, Astro, 'LINKS')
-const navs: NavItem[] = (getEnv(import.meta.env, Astro, 'NAVS') || '')
-  .split(';')
-  .filter(Boolean)
-  .map((link) => {
-    const [title = '', href = ''] = link.split(',')
-    return {
-      title,
-      href,
-    }
-  })
+const navs = parseDelimitedItems(getEnv(import.meta.env, Astro, 'NAVS'))
 
 const layoutShellClass = 'box-border w-full px-5'
 const layoutGridClass = 'mx-auto flex w-full max-w-[900px] flex-col gap-10 sm:flex-row-reverse sm:items-start'
 const mainPanelClass = 'w-full min-w-0 py-10 sm:flex-1'
 const asidePanelClass =
   'sticky top-0 w-full min-w-0 border-b border-line bg-paper pb-[10px] shadow-[0_4px_16px_-16px_rgba(0,0,0,0.1)] sm:w-[240px] sm:min-w-[240px] sm:self-start sm:border-b-0 sm:bg-transparent sm:pb-5 sm:pt-10 sm:shadow-none'
-const asideInnerClass = 'relative overflow-y-visible sm:max-h-[100svh] sm:overflow-x-hidden sm:overflow-y-auto'
-const navListClass = 'm-0 flex list-none flex-wrap gap-[2px] pl-0 pt-5 sm:block'
-const navItemClass = 'flex items-center text-[14px] leading-none sm:mb-[10px] sm:text-base sm:leading-normal'
-const navLinkClass =
-  'flex-1 inline-block rounded-[8px] px-3 py-2 font-medium text-ink no-underline transition-all duration-200 ease-in-out hover:translate-x-1 hover:bg-surface-hover hover:shadow-soft hover:no-underline'
-const navLinkCurrentClass = 'bg-surface text-site-title shadow-soft'
 const skipLinkClass =
   'pointer-events-none absolute left-5 top-0 z-[1100] -translate-y-full rounded-panel bg-heading px-3 py-2 text-sm text-white no-underline transition-transform duration-150 focus-visible:pointer-events-auto focus-visible:translate-y-5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-heading'
-const searchToggleId = 'search-toggle'
-const searchToggleClass = 'peer sr-only sm:hidden'
-const searchToggleLabelClass =
-  'absolute right-0 top-5 inline-flex h-6 w-6 items-center justify-center rounded-panel bg-paper text-base leading-6 text-heading no-underline peer-focus-visible:outline peer-focus-visible:outline-1 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-heading sm:hidden'
-const searchFormClass =
-  'mt-3 hidden rounded-panel border border-line bg-code p-2 text-muted peer-checked:block sm:mt-0 sm:block'
-const searchInputClass =
-  'box-border w-full rounded-panel border border-transparent bg-surface px-2 text-[16px] leading-[2.4] text-heading outline-none placeholder:text-muted focus-visible:border-heading focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-heading sm:text-[12px]'
-const backToTopClass =
-  'pointer-events-auto z-[1000] flex h-8 w-8 items-center justify-center rounded-full bg-surface text-[24px] opacity-90 shadow-soft transition-transform duration-300 hover:-translate-y-[3px] active:translate-y-px'
-const backToTopIconClass = 'h-auto w-auto [filter:var(--icon-secondary-filter)]'
 const skipLinkText = 'Skip to main content'
-const searchLabelText = 'Search'
 ---
 
 <!doctype html>
@@ -144,101 +60,31 @@ const searchLabelText = 'Search'
 
   <body>
     <a href="#main-content" class={skipLinkClass}>{skipLinkText}</a>
-    <main id="main-content" class={layoutShellClass}>
+    <div class={layoutShellClass}>
       <div class={layoutGridClass}>
         <aside class={asidePanelClass}>
           <slot name="aside">
-            <div class={asideInnerClass}>
-              <nav aria-label="Primary navigation">
-                <ul class={navListClass}>
-                  <li class={navItemClass}>
-                    <a
-                      href={SITE_URL}
-                      title={channel?.title}
-                      class:list={[navLinkClass, currentPathname === siteRootPathname && navLinkCurrentClass]}
-                    >
-                      Home
-                    </a>
-                  </li>
-                  {
-                    TAGS ? (
-                      <li class={navItemClass}>
-                        <a
-                          href={`${SITE_URL}tags`}
-                          title="Tags"
-                          class:list={[navLinkClass, currentPathname === tagsPathname && navLinkCurrentClass]}
-                        >
-                          Tags
-                        </a>
-                      </li>
-                    ) : null
-                  }
-                  {
-                    LINKS ? (
-                      <li class={navItemClass}>
-                        <a
-                          href={`${SITE_URL}links`}
-                          title="Links"
-                          class:list={[navLinkClass, currentPathname === linksPathname && navLinkCurrentClass]}
-                        >
-                          Links
-                        </a>
-                      </li>
-                    ) : null
-                  }
-                  {
-                    navs.map((nav) => (
-                      <li class={navItemClass}>
-                        <a
-                          href={nav.href}
-                          title={nav.title}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          class={navLinkClass}
-                        >
-                          {nav.title}
-                        </a>
-                      </li>
-                    ))
-                  }
-                </ul>
-              </nav>
-
-              <input
-                id={searchToggleId}
-                class={searchToggleClass}
-                name="icon"
-                type="checkbox"
-                aria-label="Toggle search"
-              />
-              <label for={searchToggleId} class={searchToggleLabelClass} aria-hidden="true">🔍</label>
-              <form class={searchFormClass} action={searchAction} method="get" role="search">
-                {GOOGLE_SEARCH_SITE ? <input type="hidden" name="as_sitesearch" value={GOOGLE_SEARCH_SITE} /> : null}
-                <label class="sr-only" for="search-query">{searchLabelText}</label>
-                <input
-                  id="search-query"
-                  class={searchInputClass}
-                  type="search"
-                  name="q"
-                  placeholder="Search…"
-                  autocomplete="off"
-                  inputmode="search"
-                  spellcheck={false}
-                />
-              </form>
-            </div>
+            <NavSidebar
+              channelTitle={channel?.title}
+              currentPathname={currentPathname}
+              googleSearchSite={GOOGLE_SEARCH_SITE}
+              linksPathname={linksPathname}
+              navs={navs}
+              searchAction={searchAction}
+              showLinks={Boolean(LINKS)}
+              showTags={Boolean(TAGS)}
+              siteRootPathname={siteRootPathname}
+              siteUrl={SITE_URL}
+              tagsPathname={tagsPathname}
+            />
           </slot>
         </aside>
-        <div class={mainPanelClass}>
+        <main id="main-content" class={mainPanelClass}>
           <slot />
-        </div>
+        </main>
       </div>
-      <div id="back-to-top-wrapper">
-        <a href="#main-content" id="back-to-top" class={backToTopClass} aria-label="Back to top">
-          <img {...backToTopIcon} class={backToTopIconClass} alt="" />
-        </a>
-      </div>
-    </main>
+      <BackToTop />
+    </div>
     <Fragment set:html={FOOTER_INJECT} />
   </body>
 </html>

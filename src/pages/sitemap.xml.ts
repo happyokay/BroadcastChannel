@@ -1,26 +1,28 @@
 import type { APIRoute } from 'astro'
+import { getSitemapUrl, resolveSiteUrl } from '../lib/seo'
 import { getChannelInfo } from '../lib/telegram'
 
 export const GET: APIRoute = async (Astro) => {
-  const request = Astro.request
-  const url = new URL(request.url)
+  const siteUrl = resolveSiteUrl(Astro.locals.SITE_URL, Astro.url.origin)
   const channel = await getChannelInfo(Astro)
   const posts = channel.posts || []
 
   const pageSize = 20
-  let count = +posts[0]?.id
+  let count = Number(posts[0]?.id)
 
   const pages: number[] = []
-  pages.push(count)
-  while (count > pageSize) {
-    count -= pageSize
+  if (Number.isFinite(count) && count > 0) {
     pages.push(count)
+    while (count > pageSize) {
+      count -= pageSize
+      pages.push(count)
+    }
   }
 
   const sitemaps = pages.map((page) => {
     return `
 <sitemap>
-  <loc>${url.origin}/sitemap/${page}.xml</loc>
+  <loc>${getSitemapUrl(siteUrl, `sitemap/${page}.xml`)}</loc>
 </sitemap>`
   })
 
@@ -29,6 +31,7 @@ export const GET: APIRoute = async (Astro) => {
   ${sitemaps.join('')}
 </sitemapindex>`, {
     headers: {
+      'Cache-Control': 'public, max-age=3600',
       'Content-Type': 'application/xml',
     },
   })
