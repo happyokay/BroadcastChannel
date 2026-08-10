@@ -1,9 +1,9 @@
 import type { GetChannelInfoParams } from '../../types'
-import type { LoadedChannelDocument, RequestContext } from './types'
+import type { LoadedChannelDocument } from './types'
 import * as cheerio from 'cheerio'
 import { defineCachedFunction } from 'ocache'
 import { $fetch } from 'ofetch'
-import { getBooleanEnv, getEnv, getStaticProxy } from '../env'
+import { getBooleanEnv, getEnv, getStaticProxy, getTelegramHost } from '../env'
 
 interface TelegramHtmlParams {
   host: string
@@ -15,8 +15,8 @@ interface TelegramHtmlParams {
   headers: Record<string, string>
 }
 
-function getRequiredEnv(context: RequestContext, name: string): string {
-  const value = getEnv(import.meta.env, context, name)
+function getRequiredEnv(name: string): string {
+  const value = getEnv(import.meta.env, name)
   if (!value) {
     throw new Error(`Missing required env: ${name}`)
   }
@@ -52,8 +52,8 @@ async function fetchTelegramHtml({ host, channel, id, before, after, q, headers 
 const loadTelegramHtml = defineCachedFunction(fetchTelegramHtml, {
   name: 'telegram-html',
   maxAge: 60 * 5,
-  swr: true,
-  staleMaxAge: 60 * 60,
+  // A detached refresh has no Cloudflare waitUntil context and can leave a stuck pending promise.
+  swr: false,
   getKey: ({ host, channel, id, before, after, q }) => JSON.stringify({
     host,
     channel,
@@ -65,14 +65,13 @@ const loadTelegramHtml = defineCachedFunction(fetchTelegramHtml, {
 })
 
 export async function loadChannelDocument(
-  context: RequestContext,
   params: GetChannelInfoParams & { id?: string } = {},
 ): Promise<LoadedChannelDocument> {
   const { before, after, q, id } = params
-  const host = getEnv(import.meta.env, context, 'TELEGRAM_HOST') ?? 't.me'
-  const channel = getRequiredEnv(context, 'CHANNEL')
-  const staticProxy = getStaticProxy(import.meta.env, context)
-  const reactionsEnabled = getBooleanEnv(import.meta.env, context, 'REACTIONS')
+  const host = getTelegramHost(import.meta.env)
+  const channel = getRequiredEnv('CHANNEL')
+  const staticProxy = getStaticProxy(import.meta.env)
+  const reactionsEnabled = getBooleanEnv(import.meta.env, 'REACTIONS')
   const html = await loadTelegramHtml({
     host,
     channel,
@@ -86,6 +85,7 @@ export async function loadChannelDocument(
   return {
     $: cheerio.load(html, {}, false),
     channel,
+    telegramHost: host,
     staticProxy,
     reactionsEnabled,
   }

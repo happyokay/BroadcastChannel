@@ -8,6 +8,9 @@
     "nodejs_compat"
   ],
   "keep_vars": true,
+  "cache": {
+    "enabled": true
+  },
   "assets": {
     "binding": "ASSETS",
     "directory": "./dist"

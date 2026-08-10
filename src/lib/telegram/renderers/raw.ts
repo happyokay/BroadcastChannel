@@ -1,6 +1,6 @@
 import type { CheerioAPI } from 'cheerio'
 import type { MessageSelection, StaticProxyOptions } from '../types'
-import { proxyStyleUrls } from './html'
+import { proxyStyleUrls } from '../url'
 
 const RAW_CONTENT_SELECTORS = [
   '.tgme_widget_message_poll',

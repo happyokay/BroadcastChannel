@@ -12,7 +12,7 @@ export const GET: APIRoute = async (context) => {
     description: channel.description,
     site: siteUrl.toString(),
     trailingSlash: false,
-    stylesheet: getBooleanEnv(import.meta.env, context, 'RSS_BEAUTIFY') ? '/rss.xsl' : undefined,
+    stylesheet: getBooleanEnv(import.meta.env, 'RSS_BEAUTIFY') ? '/rss.xsl' : undefined,
     items: posts.map(item => ({
       link: `posts/${item.id}`,
       title: item.title,

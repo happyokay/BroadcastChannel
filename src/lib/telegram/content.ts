@@ -3,19 +3,23 @@ import type { IndexedStaticProxyOptions, MessageSelection, StaticProxyOptions } 
 import flourite from 'flourite'
 import prism, { ensurePrismLanguage } from '../prism'
 import { getCustomEmojiImage } from './emoji'
-import { proxyStyleUrls } from './renderers/html'
-import { normalizeUrlAttribute, normalizeUrlAttributes } from './url'
+import { normalizeUrlAttribute, normalizeUrlAttributes, proxyStyleUrls } from './url'
 
 interface ModifyHTMLContentOptions extends IndexedStaticProxyOptions {
+  telegramHost?: string
   normalizeUrls?: boolean
 }
 
-async function hydrateTgEmoji($: CheerioAPI, content: MessageSelection, options: StaticProxyOptions = {}): Promise<void> {
-  const { staticProxy = '' } = options
+interface HydrateTgEmojiOptions extends StaticProxyOptions {
+  telegramHost?: string
+}
+
+async function hydrateTgEmoji($: CheerioAPI, content: MessageSelection, options: HydrateTgEmojiOptions = {}): Promise<void> {
+  const { telegramHost, staticProxy = '' } = options
 
   for (const emojiNode of content.find('tg-emoji').toArray()) {
     const emojiId = $(emojiNode).attr('emoji-id')
-    const imageUrl = getCustomEmojiImage(emojiId, staticProxy)
+    const imageUrl = getCustomEmojiImage(emojiId, { telegramHost, staticProxy })
 
     if (imageUrl) {
       $(emojiNode).replaceWith(`<img class="tg-emoji" src="${imageUrl}" alt="" loading="lazy" width="20" height="20" />`)
@@ -24,9 +28,9 @@ async function hydrateTgEmoji($: CheerioAPI, content: MessageSelection, options:
 }
 
 export async function modifyHTMLContent($: CheerioAPI, content: MessageSelection, options: ModifyHTMLContentOptions = {}): Promise<MessageSelection> {
-  const { index = 0, staticProxy = '', normalizeUrls = true } = options
+  const { index = 0, telegramHost, staticProxy = '', normalizeUrls = true } = options
 
-  await hydrateTgEmoji($, content, { staticProxy })
+  await hydrateTgEmoji($, content, { telegramHost, staticProxy })
   if (normalizeUrls) {
     normalizeUrlAttributes($, content)
   }
@@ -66,8 +70,10 @@ export async function modifyHTMLContent($: CheerioAPI, content: MessageSelection
   }
 
   for (const preNode of content.find('pre').toArray()) {
+    const pre = $(preNode)
+    pre.addClass('code')
+
     try {
-      const pre = $(preNode)
       pre.find('br').replaceWith('\n')
 
       const code = pre.text()

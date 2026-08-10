@@ -31,9 +31,11 @@ const adapterAliases = {
 
 const unsupportedProviders = new Set(['cloudflare-pages', 'cloudflare_pages'])
 
-const requestedProvider = (process.env.HOME === '/dev/shm/home' && process.env.TMPDIR === '/dev/shm/tmp')
-  ? 'edgeone'
-  : process.env.SERVER_ADAPTER || provider
+const isEdgeOne = provider === 'edgeone_pages'
+  || Boolean(process.env.EDGEONE_PROJECT_ID)
+  || Boolean(process.env.EO_MAKERS)
+
+const requestedProvider = process.env.SERVER_ADAPTER || (isEdgeOne ? 'edgeone' : provider)
 
 if (unsupportedProviders.has(requestedProvider)) {
   throw new Error('Cloudflare Pages is not supported. Use Cloudflare Workers with SERVER_ADAPTER=cloudflare_workers.')
@@ -51,7 +53,7 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
     ssr: {
-      noExternal: process.env.DOCKER ? !!process.env.DOCKER : undefined,
+      noExternal: (process.env.DOCKER || adapterProvider === 'edgeone') ? true : undefined,
     },
   },
 })

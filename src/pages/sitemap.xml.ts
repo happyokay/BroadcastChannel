@@ -4,7 +4,7 @@ import { getChannelInfo } from '../lib/telegram'
 
 export const GET: APIRoute = async (Astro) => {
   const siteUrl = resolveSiteUrl(Astro.locals.SITE_URL, Astro.url.origin)
-  const channel = await getChannelInfo(Astro)
+  const channel = await getChannelInfo()
   const posts = channel.posts || []
 
   const pageSize = 20

@@ -1,5 +1,5 @@
 import type { AnyNode, CheerioAPI } from 'cheerio'
-import { getProxiedUrl, normalizeUrlAttribute } from '../url'
+import { getProxiedUrl, isProxyableUrl, mapSrcsetUrls, normalizeUrlAttribute } from '../url'
 
 export const STYLE_URL_REGEX = /url\(["'](.*?)["']/i
 export const SYNTHETIC_IMAGE_DIMENSION = 1000
@@ -9,30 +9,17 @@ const STYLE_DIMENSION_REGEX = {
   height: /height:\s*(\d+(?:\.\d+)?)px/i,
 } as const
 const STYLE_PADDING_TOP_REGEX = /padding-top:\s*(\d+(?:\.\d+)?)%/i
-const PROXYABLE_URL_REGEX = /^(?:https?:)?\/\//i
 
 export function getImageLoading(index: number): 'eager' | 'lazy' {
   return index > 15 ? 'lazy' : 'eager'
 }
 
 export function getMaybeProxiedUrl(staticProxy: string, url: string): string {
-  return PROXYABLE_URL_REGEX.test(url) ? getProxiedUrl(staticProxy, url) : normalizeUrlAttribute(url)
+  return isProxyableUrl(url) ? getProxiedUrl(staticProxy, url) : normalizeUrlAttribute(url)
 }
 
 export function getMaybeProxiedSrcset(staticProxy: string, srcset: string): string {
-  return srcset
-    .split(',')
-    .map((candidate) => {
-      const [url, ...descriptors] = candidate.trim().split(/\s+/)
-
-      if (!url) {
-        return ''
-      }
-
-      return [getMaybeProxiedUrl(staticProxy, url), ...descriptors].join(' ')
-    })
-    .filter(Boolean)
-    .join(', ')
+  return mapSrcsetUrls(srcset, url => getMaybeProxiedUrl(staticProxy, url))
 }
 
 function getStyleDimension(style: string | undefined, property: 'width' | 'height'): number | null {

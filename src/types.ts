@@ -40,20 +40,7 @@ export interface GetChannelInfoParams {
   q?: string
 }
 
-export interface AstroEnvContext {
-  locals?: App.Locals
-  request?: Request
-  url?: URL
-}
-
 export interface NavItem {
   title: string
   href: string
-}
-
-export interface TagCloudItem {
-  href: string
-  label: string
-  title?: string
-  external?: boolean
 }

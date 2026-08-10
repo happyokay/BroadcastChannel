@@ -1,4 +1,6 @@
-const TARGET_WHITELIST = [
+import { getTargetWhitelist } from './env'
+
+const DEFAULT_TARGET_WHITELIST = [
   't.me',
   'telegram.org',
   'telegram.me',
@@ -24,7 +26,11 @@ export function resolveStaticProxyTarget(rawTarget: string): URL {
 
 export function isStaticProxyWhitelisted(target: URL): boolean {
   const isAllowedProtocol = target.protocol === 'http:' || target.protocol === 'https:'
-  return isAllowedProtocol && TARGET_WHITELIST.some(domain => target.hostname === domain || target.hostname.endsWith(`.${domain}`))
+  const targetWhitelist = [
+    ...DEFAULT_TARGET_WHITELIST,
+    ...getTargetWhitelist(import.meta.env),
+  ]
+  return isAllowedProtocol && targetWhitelist.some(domain => target.hostname === domain || target.hostname.endsWith(`.${domain}`))
 }
 
 function getForwardedRequestHeaders(request: Request): Headers {

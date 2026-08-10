@@ -6,6 +6,7 @@ const HTML_ENTITY_REGEX = /&(?:#(\d+)|#x([\da-f]+)|([a-z][\da-z]+));/gi
 const STYLE_DOUBLE_QUOTED_URL_REGEX = /url\("([^"]*)"\)/gi
 const STYLE_SINGLE_QUOTED_URL_REGEX = /url\('([^']*)'\)/gi
 const STYLE_UNQUOTED_URL_REGEX = /url\(([^)"']*)\)/gi
+const PROXYABLE_URL_REGEX = /^(?:https?:)?\/\//i
 const URL_ATTRIBUTE_NAMES = ['href', 'src', 'poster', 'action', 'formaction', 'data-webp'] as const
 const HTML_ENTITY_MAP: Record<string, string> = {
   amp: '&',
@@ -57,7 +58,11 @@ export function getProxiedUrl(staticProxy: string, url: string): string {
   return staticProxy + normalizeUrlAttribute(url)
 }
 
-export function normalizeSrcsetAttribute(srcset: string): string {
+export function isProxyableUrl(url: string): boolean {
+  return PROXYABLE_URL_REGEX.test(url)
+}
+
+export function mapSrcsetUrls(srcset: string, mapper: (url: string) => string): string {
   return srcset
     .split(',')
     .map((candidate) => {
@@ -67,17 +72,32 @@ export function normalizeSrcsetAttribute(srcset: string): string {
         return ''
       }
 
-      return [normalizeUrlAttribute(url), ...descriptors].join(' ')
+      return [mapper(url), ...descriptors].join(' ')
     })
     .filter(Boolean)
     .join(', ')
 }
 
-function normalizeStyleUrls(style: string): string {
+export function normalizeSrcsetAttribute(srcset: string): string {
+  return mapSrcsetUrls(srcset, normalizeUrlAttribute)
+}
+
+export function replaceStyleUrls(style: string, mapper: (url: string) => string): string {
   return style
-    .replace(STYLE_DOUBLE_QUOTED_URL_REGEX, (_match, url: string) => `url("${normalizeUrlAttribute(url)}")`)
-    .replace(STYLE_SINGLE_QUOTED_URL_REGEX, (_match, url: string) => `url('${normalizeUrlAttribute(url)}')`)
-    .replace(STYLE_UNQUOTED_URL_REGEX, (_match, url: string) => `url(${normalizeUrlAttribute(url.trim())})`)
+    .replace(STYLE_DOUBLE_QUOTED_URL_REGEX, (_match, url: string) => `url("${mapper(url)}")`)
+    .replace(STYLE_SINGLE_QUOTED_URL_REGEX, (_match, url: string) => `url('${mapper(url)}')`)
+    .replace(STYLE_UNQUOTED_URL_REGEX, (_match, url: string) => `url(${mapper(url.trim())})`)
+}
+
+function normalizeProxyableStyleUrl(staticProxy: string, url: string): string {
+  const normalizedUrl = normalizeUrlAttribute(url.trim())
+
+  if (!isProxyableUrl(normalizedUrl)) {
+    return normalizedUrl
+  }
+
+  const absoluteUrl = normalizedUrl.startsWith('//') ? `https:${normalizedUrl}` : normalizedUrl
+  return getProxiedUrl(staticProxy, absoluteUrl)
 }
 
 export function normalizeUrlAttributes($: CheerioAPI, root: MessageSelection): void {
@@ -103,7 +123,20 @@ export function normalizeUrlAttributes($: CheerioAPI, root: MessageSelection): v
     const style = element.attr('style')
 
     if (style) {
-      element.attr('style', normalizeStyleUrls(style))
+      element.attr('style', replaceStyleUrls(style, normalizeUrlAttribute))
+    }
+  }
+}
+
+export function proxyStyleUrls($: CheerioAPI, root: MessageSelection, staticProxy: string): void {
+  const nodes = [...root.toArray(), ...root.find('*').toArray()]
+
+  for (const node of nodes) {
+    const element = $(node)
+    const style = element.attr('style')
+
+    if (style) {
+      element.attr('style', replaceStyleUrls(style, url => normalizeProxyableStyleUrl(staticProxy, url)))
     }
   }
 }

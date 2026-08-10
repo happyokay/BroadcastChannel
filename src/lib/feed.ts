@@ -7,7 +7,6 @@ export interface FeedData {
   channel: ChannelInfo
   posts: Post[]
   siteUrl: URL
-  tag: string | null
   title: string
 }
 
@@ -53,7 +52,7 @@ export function buildJsonFeed({ channel, posts, siteUrl, title }: FeedData): Jso
 
 export async function getFeedData(context: APIContext): Promise<FeedData> {
   const tag = context.url.searchParams.get('tag')
-  const channel = await getChannelInfo(context, {
+  const channel = await getChannelInfo({
     q: tag ? `#${tag}` : '',
   })
   const siteUrl = new URL(context.locals.SITE_URL, context.url.origin)
@@ -63,7 +62,6 @@ export async function getFeedData(context: APIContext): Promise<FeedData> {
     channel,
     posts: channel.posts ?? [],
     siteUrl,
-    tag,
     title: `${tag ? `${tag} | ` : ''}${channel.title}`,
   }
 }

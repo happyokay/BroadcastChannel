@@ -1,4 +1,4 @@
-import type { AstroEnvContext, ChannelInfo, SeoMeta } from '../types'
+import type { ChannelInfo, SeoMeta } from '../types'
 import { getBooleanEnv } from './env'
 
 const TRAILING_SLASH_REGEX = /\/$/
@@ -24,15 +24,15 @@ export function getSitemapUrl(baseUrl: URL, path: string): string {
 }
 
 export function getPageSeo(options: {
-  Astro: AstroEnvContext & { url: URL }
   channel?: ChannelInfo
   locale?: string
   seo?: SeoMeta
   siteUrl: string
+  url: URL
 }) {
-  const { Astro, channel, locale, seo, siteUrl } = options
-  const absoluteSiteUrl = getAbsoluteSiteUrl(siteUrl, Astro.url.origin)
-  const canonicalUrl = new URL(Astro.url.pathname, absoluteSiteUrl)
+  const { channel, locale, seo, siteUrl, url } = options
+  const absoluteSiteUrl = getAbsoluteSiteUrl(siteUrl, url.origin)
+  const canonicalUrl = new URL(url.pathname, absoluteSiteUrl)
   const siteRootPathname = normalizePathname(new URL(absoluteSiteUrl).pathname)
   const canonical = normalizePathname(canonicalUrl.pathname) === siteRootPathname
     ? canonicalUrl.toString()
@@ -61,8 +61,8 @@ export function getPageSeo(options: {
       title: pageTitle,
       description: seoDescription,
       canonical,
-      noindex: seo?.noindex ?? getBooleanEnv(import.meta.env, Astro, 'NOINDEX'),
-      nofollow: seo?.nofollow ?? getBooleanEnv(import.meta.env, Astro, 'NOFOLLOW'),
+      noindex: seo?.noindex ?? getBooleanEnv(import.meta.env, 'NOINDEX'),
+      nofollow: seo?.nofollow ?? getBooleanEnv(import.meta.env, 'NOFOLLOW'),
       openGraph: {
         basic: {
           type: isArticle ? 'article' : 'website',
