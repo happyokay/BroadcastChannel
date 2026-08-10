@@ -5,7 +5,7 @@ import TagCloudSection from '../components/TagCloudSection.astro'
 import { getChannelInfo } from '../lib/telegram'
 import { getEnv, parseCsvList } from '../lib/env'
 
-const channel = await getChannelInfo(Astro)
+const channel = await getChannelInfo()
 const pageSeo = { title: 'Tags' }
 const items = parseCsvList(getEnv(import.meta.env, Astro, 'TAGS')).map((tag) => ({
   href: `/search/result?q=${encodeURIComponent(`#${tag}`)}`,

@@ -4,7 +4,7 @@ import { getChannelInfo } from '../lib/telegram'
 
 export const prerender = true
 
-const channel = await getChannelInfo(Astro)
+const channel = await getChannelInfo()
 ---
 
 <List channel={channel} after={false} pageHeading={channel.title} />

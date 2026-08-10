@@ -5,7 +5,7 @@ import TagCloudSection from '../components/TagCloudSection.astro'
 import { getChannelInfo } from '../lib/telegram'
 import { getEnv, parseDelimitedItems } from '../lib/env'
 
-const channel = await getChannelInfo(Astro)
+const channel = await getChannelInfo()
 const pageSeo = { title: 'Links' }
 const links = parseDelimitedItems(getEnv(import.meta.env, Astro, 'LINKS'))
 

@@ -4,7 +4,7 @@ import { getChannelInfo } from '../../lib/telegram'
 import type { SeoMeta } from '../../types'
 
 const q = Astro.url.searchParams.get('q') || ''
-const channel = await getChannelInfo(Astro, {
+const channel = await getChannelInfo({
   q,
 })
 const pageSeo: SeoMeta = {
