@@ -26,20 +26,16 @@ const providers = {
 }
 
 const adapterAliases = {
-  cloudflare: 'cloudflare_workers',
+  'cloudflare': 'cloudflare_workers',
+  'cloudflare-pages': 'cloudflare_workers',
+  'cloudflare_pages': 'cloudflare_workers',
 }
-
-const unsupportedProviders = new Set(['cloudflare-pages', 'cloudflare_pages'])
 
 const isEdgeOne = provider === 'edgeone_pages'
   || Boolean(process.env.EDGEONE_PROJECT_ID)
   || Boolean(process.env.EO_MAKERS)
 
 const requestedProvider = process.env.SERVER_ADAPTER || (isEdgeOne ? 'edgeone' : provider)
-
-if (unsupportedProviders.has(requestedProvider)) {
-  throw new Error('Cloudflare Pages is not supported. Use Cloudflare Workers with SERVER_ADAPTER=cloudflare_workers.')
-}
 
 const adapterProvider = adapterAliases[requestedProvider] || requestedProvider
 
