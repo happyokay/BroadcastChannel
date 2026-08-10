@@ -18,6 +18,7 @@ const { currentPathname, hasCustomTitle, linksPathname, seoParams, siteRootPathn
     locale,
     seo,
     siteUrl: SITE_URL,
+    url: Astro.url,
   })
 
 const GOOGLE_SEARCH_SITE = getEnv(import.meta.env, Astro, 'GOOGLE_SEARCH_SITE')
