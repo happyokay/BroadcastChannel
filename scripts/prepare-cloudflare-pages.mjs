@@ -17,7 +17,6 @@ const serverEntry = join(distDir, 'server', 'entry.mjs')
 const workerPath = join(distDir, '_worker.js')
 const clientWorkerPath = join(clientDir, '_worker.js')
 const shimDir = join(distDir, '.pages-shims')
-const wrapperEntry = join(shimDir, 'worker-entry.mjs')
 
 await cp(clientDir, distDir, { recursive: true, force: true })
 await mkdir(shimDir, { recursive: true })
@@ -38,33 +37,9 @@ await writeFile(
     '',
   ].join('\n'),
 )
-await writeFile(
-  wrapperEntry,
-  [
-    `import worker from ${JSON.stringify(serverEntry)}`,
-    '',
-    'async function fetch(request, env, context) {',
-    '  const response = await worker.fetch(request, env, context)',
-    '  const contentType = response.headers.get("content-type") || ""',
-    '  if (!contentType.includes("text/html") || response.body === null) {',
-    '    return response',
-    '  }',
-    '',
-    '  const body = await response.text()',
-    '  return new Response(body, {',
-    '    status: response.status,',
-    '    statusText: response.statusText,',
-    '    headers: response.headers,',
-    '  })',
-    '}',
-    '',
-    'export default { fetch }',
-    '',
-  ].join('\n'),
-)
 
 await build({
-  entryPoints: [wrapperEntry],
+  entryPoints: [serverEntry],
   outfile: workerPath,
   bundle: true,
   format: 'esm',
